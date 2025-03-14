@@ -1,0 +1,77 @@
+{% load crispy_forms_tags %}
+<div>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    Solicitud
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="order-form">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div id="stock-warning" class="text-danger mt-2" style="display: none;">
+                            No puedes pedir más de la cantidad disponible.
+                        </div>
+                        <input class="btn btn-info btn-block" type="submit" value="Solicitud" id="submit-btn" disabled>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    Registros de pedidos
+                </div>
+                <div class="card-body">
+                    <table class="table bg-white">
+                        <thead class="bg-info text-white">
+                            <tr>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Categoría</th>
+                                <th scope="col">Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in order %}
+                            {% if order.customer == user %}
+                            <tr>
+                                <td>{{ order.name }}</td>
+                                <td>{{ order.name.category }}</td>
+                                <td>{{ order.order_quantity }}</td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let quantityInput = document.querySelector("input[name='order_quantity']");
+        let productSelect = document.querySelector("select[name='name']");
+        let submitButton = document.getElementById("submit-btn");
+        let stockWarning = document.getElementById("stock-warning");
+
+        function checkStock() {
+            let selectedOption = productSelect.options[productSelect.selectedIndex];
+            let availableStock = selectedOption.getAttribute("data-stock"); 
+            let requestedQuantity = quantityInput.value;
+
+            if (requestedQuantity && availableStock && requestedQuantity > availableStock) {
+                stockWarning.style.display = "block";
+                submitButton.disabled = true;
+            } else {
+                stockWarning.style.display = "none";
+                submitButton.disabled = false;
+            }
+        }
+
+        quantityInput.addEventListener("input", checkStock);
+        productSelect.addEventListener("change", checkStock);
+    });
+</script>

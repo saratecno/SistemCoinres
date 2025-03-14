@@ -1,0 +1,29 @@
+/* Estilo para la sección de bienvenida */
+.welcome-section {
+    position: relative;
+    background: url('img/banners.png') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+/* Capa oscura para mejorar legibilidad */
+
+/* Contenedor de contenido */
+.welcome-section .container {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté por encima del overlay */
+}
+
+/* Ajustar botón */
+.welcome-section .btn {
+    position: relative;
+    z-index: 3; /* Asegura que sea clickeable */
+}
+
+
+
